@@ -2,10 +2,6 @@
 # ComfyUI Today Pack – Curated Minimal Set #
 ############################################
 
-# -------- DiffusionModels --------
-models/DiffusionModels/z_image_turbo_bf16.safetensors
-
-
 # -------- ZImageControlNet (entire folder) --------
 models/ZImageControlNet/
 
@@ -19,10 +15,11 @@ models/VAE/fluxVaeSft_aeSft.sft
 
 
 # -------- LoRA --------
-
+models/Lora/Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors
 
 # -------- Text Encoders --------
-models/TextEncoders/clip_g.safetensors
-models/TextEncoders/clip_l.safetensors
-models/TextEncoders/t5xxl_fp16.safetensors
-models/TextEncoders/qwen_3_4b.safetensors
+models/TextEncoders/
+
+# -------- DiffusionModels --------
+models/DiffusionModels/z_image_turbo_bf16.safetensors
+models/DiffusionModels/qwen_image_edit_2511_bf16.safetensors

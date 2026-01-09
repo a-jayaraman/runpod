@@ -61,7 +61,6 @@ REMOTE_OUTPUTS="${REMOTE_BASE}/outputs"
 
 LOCAL_MODELS="${CACHE_ROOT}/models"
 LOCAL_CUSTOM_NODES="${CACHE_ROOT}/custom_nodes"
-LOCAL_CUSTOM_NODES2="${COMFY_DIR}/custom_nodes"
 LOCAL_WORKFLOWS="${COMFY_DIR}/user/default/workflows"
 LOCAL_INPUTS="${COMFY_DIR}/inputs"
 LOCAL_OUTPUTS="${COMFY_DIR}/outputs"
@@ -90,19 +89,25 @@ apt install libmagickwand-dev
 apt install git
 
 git pull origin master
-wget https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.2-12.tar.gz
-tar xzf 7.1.2-12.tar.gz
-cd ImageMagick-7.1.2-12
-./configure --prefix=/usr/local
-make
-make install
-ldconfig
 
+if ! dpkg -s magick >/dev/null 2>&1; then
+    echo "magick is not installed. Installing from source..."
+    
+    (wget https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.2-12.tar.gz
+    tar xzf 7.1.2-12.tar.gz
+    cd ImageMagick-7.1.2-12
+    ./configure --prefix=/usr/local
+    make
+    make install
+    ldconfig
+    cd ..
+    rm -rf ImageMagick-*
+    rm 7.1.2-12.tar.gz) >/dev/null 2>&1
+
+else
+    echo "magick is already installed."
+fi
 magick --version
-
-cd ..
-rm -rf ImageMagick-*
-rm 7.1.2-12.tar.gz
 
 need_cmd rclone
 need_cmd rsync || true  # not required; just checking if it's present
@@ -168,7 +173,26 @@ sync_up_dir() {
 sync_down_dir "${REMOTE_CUSTOM_NODES}" "${LOCAL_CUSTOM_NODES}"
 sync_down_dir "${REMOTE_WORKFLOWS}" "${LOCAL_WORKFLOWS}"
 
-ln -s "${LOCAL_CUSTOM_NODES}" "${LOCAL_CUSTOM_NODES2}"
+cd "${COMFY_DIR}/custom_nodes"
+for dir in "${LOCAL_CUSTOM_NODES}"/*/; do
+    # Extract the directory name only
+    DIR_NAME=$(basename "$dir")
+
+    # Check if a file or directory of the same name already exists in the current directory
+    if [ -e "$DIR_NAME" ] || [ -L "$DIR_NAME" ]; then
+        echo "Skipping: $DIR_NAME already exists in the current directory."
+    else
+        # Create the symbolic link using the absolute path of the target
+        # Using absolute paths for the target helps avoid broken links if the link is moved
+        TARGET_PATH=$(readlink -f "$dir")
+        ln -s "$TARGET_PATH" "$DIR_NAME"
+        if [ $? -eq 0 ]; then
+            echo "Created symlink: $DIR_NAME -> $TARGET_PATH"
+        else
+            echo "Failed to create symlink for $DIR_NAME"
+        fi
+    fi
+done
 
 cd "${COMFY_DIR}"
 source .venv/bin/activate
@@ -272,7 +296,7 @@ sync_loop() {
 
 cleanup() {
   echo ""
-  echo ">>> Cleanup triggered (exit). Final sync so you don't lose your work like a clown."
+  echo ">>> Cleanup triggered (exit). Final sync so you don't lose your work."
   if [[ -n "${sync_loop_pid}" ]]; then
     kill "${sync_loop_pid}" >/dev/null 2>&1 || true
     wait "${sync_loop_pid}" >/dev/null 2>&1 || true
