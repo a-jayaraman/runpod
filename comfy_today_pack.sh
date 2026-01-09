@@ -95,7 +95,7 @@ tar xzf 7.1.2-12.tar.gz
 cd ImageMagick-7.1.2-12
 ./configure --prefix=/usr/local
 make
-sudo make install
+make install
 
 magick --version
 
