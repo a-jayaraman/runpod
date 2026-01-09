@@ -15,6 +15,8 @@ rclone config create b2 b2 \
 # USER CONFIG #
 ###############
 
+START_DIR="$(pwd)"
+
 # rclone remote name (set via: rclone config)
 # Example: "r2" or "b2" or "s3"
 RCLONE_REMOTE="${RCLONE_REMOTE:-b2}"
@@ -82,8 +84,23 @@ need_cmd() {
 
 apt-get update
 apt install rsync
+apt install rclone
 apt install imagemagick
 apt install libmagickwand-dev
+apt install git
+
+git pull origin master
+wget https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.2-12.tar.gz
+tar xzf 7.1.2-12.tar.gz
+cd ImageMagick-7.1.2-12
+./configure --prefix=/usr/local
+make
+sudo make install
+
+magick --version
+
+cd ..
+rm -rf ImageMagick-*
 
 need_cmd rclone
 need_cmd rsync || true  # not required; just checking if it's present
@@ -146,10 +163,9 @@ sync_up_dir() {
 
 # Pull nodes + workflows so your setup stays consistent
 # (If you have a huge custom_nodes folder and only want some, we can refine this.)
-copy_down_file "${REMOTE_CUSTOM_NODES}" "${LOCAL_CUSTOM_NODES}"
+sync_down_dir "${REMOTE_CUSTOM_NODES}" "${LOCAL_CUSTOM_NODES}"
 sync_down_dir "${REMOTE_WORKFLOWS}" "${LOCAL_WORKFLOWS}"
 
-rm -rf "${LOCAL_CUSTOM_NODES}/__pycache__/"
 ln -s "${LOCAL_CUSTOM_NODES}" "${LOCAL_CUSTOM_NODES2}"
 
 cd "${COMFY_DIR}"
@@ -168,7 +184,8 @@ done < <(find custom_nodes -name requirements.txt -type f)
 echo ""
 echo ">>> Mapping ComfyUI model paths to cache"
 
-copy_down_file "${REMOTE_BASE}/config/extra_model_paths.yaml" "${COMFY_DIR}/extra_model_paths.yaml"
+# copy_down_file "${REMOTE_BASE}/config/extra_model_paths.yaml" "${COMFY_DIR}/extra_model_paths.yaml"
+cp "${START_DIR}/extra_model_paths.yaml" "${COMFY_DIR}/extra_model_paths.yaml"
 
 sed -i "s|__CACHE_ROOT__|${CACHE_ROOT}|g" "${COMFY_DIR}/extra_model_paths.yaml"
 
@@ -178,7 +195,8 @@ echo "extra_model_paths.yaml file copied from object store"
 # 2) Pull the model "today pack" only  #
 ########################################
 
-copy_down_file "${REMOTE_BASE}/today_pack.txt" "${TODAY_PACK_FILE}"
+# copy_down_file "${REMOTE_BASE}/today_pack.txt" "${TODAY_PACK_FILE}"
+cp "${START_DIR}/today_pack.txt" "${TODAY_PACK_FILE}"
 
 if [[ ! -f "${TODAY_PACK_FILE}" ]]; then
   cat > "${TODAY_PACK_FILE}" <<'EOF'
