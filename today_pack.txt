@@ -1,0 +1,28 @@
+############################################
+# ComfyUI Today Pack – Curated Minimal Set #
+############################################
+
+# -------- DiffusionModels --------
+models/DiffusionModels/z_image_turbo_bf16.safetensors
+
+
+# -------- ZImageControlNet (entire folder) --------
+models/ZImageControlNet/
+
+
+# -------- ESRGAN (entire folder) --------
+models/ESRGAN/
+
+
+# -------- VAE --------
+models/VAE/fluxVaeSft_aeSft.sft
+
+
+# -------- LoRA --------
+
+
+# -------- Text Encoders --------
+models/TextEncoders/clip_g.safetensors
+models/TextEncoders/clip_l.safetensors
+models/TextEncoders/t5xxl_fp16.safetensors
+models/TextEncoders/qwen_3_4b.safetensors
