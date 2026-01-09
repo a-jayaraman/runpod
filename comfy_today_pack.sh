@@ -96,11 +96,12 @@ cd ImageMagick-7.1.2-12
 ./configure --prefix=/usr/local
 make
 make install
+ldconfig
 
 magick --version
 
 cd ..
-# rm -rf ImageMagick-*
+rm -rf ImageMagick-*
 rm 7.1.2-12.tar.gz
 
 need_cmd rclone
