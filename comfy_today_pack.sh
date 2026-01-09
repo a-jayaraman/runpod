@@ -100,7 +100,8 @@ make install
 magick --version
 
 cd ..
-rm -rf ImageMagick-*
+# rm -rf ImageMagick-*
+rm 7.1.2-12.tar.gz
 
 need_cmd rclone
 need_cmd rsync || true  # not required; just checking if it's present
