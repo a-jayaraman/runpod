@@ -12,6 +12,7 @@ models/ESRGAN/
 
 # -------- VAE --------
 models/VAE/fluxVaeSft_aeSft.sft
+models/VAE/qwen_image_vae.safetensors
 
 
 # -------- LoRA --------

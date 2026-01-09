@@ -81,16 +81,16 @@ need_cmd() {
   }
 }
 
-apt-get update
-apt install rsync
-apt install rclone
-apt install imagemagick
-apt install libmagickwand-dev
-apt install git
+(apt-get update
+apt install -y rsync
+apt install -y rclone
+apt install -y imagemagick
+apt install -y libmagickwand-dev
+apt install -y git) >/dev/null 2>&1
 
 git pull origin master
 
-if ! dpkg -s magick >/dev/null 2>&1; then
+if ! command -v magick >/dev/null 2>&1; then
     echo "magick is not installed. Installing from source..."
     
     (wget https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.2-12.tar.gz
@@ -200,8 +200,8 @@ pip install uv
 
 while read -r req; do
   echo "Installing $req"
-  pip install -r "$req"
-done < <(find custom_nodes -name requirements.txt -type f)
+  pip install --quiet -r "$req"
+done < <(find -L custom_nodes -name requirements.txt -type f,l)
 
 ###########################################
 # 3) Wire ComfyUI dirs to the local cache #
