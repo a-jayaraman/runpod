@@ -310,10 +310,10 @@ cleanup() {
   echo ">>> Done."
 }
 
-trap cleanup EXIT INT TERM
-
 sync_loop &
 sync_loop_pid="$!"
+
+trap cleanup EXIT INT TERM
 
 ###########################################
 # 5) Launch ComfyUI                         #
