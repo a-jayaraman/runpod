@@ -2,11 +2,11 @@
 # ComfyUI Today Pack – Curated Minimal Set #
 ############################################
 
-# -------- ZImageControlNet (entire folder) --------
+# -------- ZImageControlNet --------
 models/ZImageControlNet/
 
 
-# -------- ESRGAN (entire folder) --------
+# -------- ESRGAN --------
 models/ESRGAN/
 
 
@@ -17,9 +17,22 @@ models/VAE/qwen_image_vae.safetensors
 
 # -------- LoRA --------
 models/Lora/Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors
+models/Lora/vivid surreal IL v1.0.safetensors
+models/Lora/add-detail-xl.safetensors
+
+
+# -------- Embeddings --------
+Embeddings/
+
 
 # -------- Text Encoders --------
 models/TextEncoders/
+
+
+# -------- StableDiffusion --------
+waiIllustriousSDXL_v150.safetensors
+animayhemPaleRider_v2TrueGrit.safetensors
+
 
 # -------- DiffusionModels --------
 models/DiffusionModels/z_image_turbo_bf16.safetensors
