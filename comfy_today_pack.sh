@@ -202,7 +202,11 @@ for dir in "${LOCAL_CUSTOM_NODES}"/*/; do
 done
 
 cd "${COMFY_DIR}"
-source .venv/bin/activate
+
+if [ -d ".venv" ]; then
+    source .venv/bin/activate
+fi
+
 pip install uv
 
 while read -r req; do
