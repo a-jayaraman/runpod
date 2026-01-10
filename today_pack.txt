@@ -30,8 +30,8 @@ models/TextEncoders/
 
 
 # -------- StableDiffusion --------
-waiIllustriousSDXL_v150.safetensors
-animayhemPaleRider_v2TrueGrit.safetensors
+models/StableDiffusion/waiIllustriousSDXL_v150.safetensors
+models/StableDiffusion/animayhemPaleRider_v2TrueGrit.safetensors
 
 
 # -------- DiffusionModels --------
