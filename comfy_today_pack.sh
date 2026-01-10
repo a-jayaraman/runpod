@@ -7,6 +7,13 @@ set -euo pipefail
 # - Local disk is a disposable cache
 #############################################
 
+if command -v vastai &> /dev/null; then
+  eval "$(vastai show env-vars -s | awk '
+    /^Name:/ { name = $2 }
+    /^Value:/ { if (name) { print "export " name "=\"${" name ":-" $2 "}\""; name = "" } }
+  ')"
+fi
+
 rclone config create b2 b2 \
   account "${BACKBLAZE_ID}" \
   key "${BACKBLAZE_KEY}"
