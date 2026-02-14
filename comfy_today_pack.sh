@@ -260,7 +260,7 @@ echo "extra_model_paths.yaml file copied from object store"
 ########################################
 
 # copy_down_file "${REMOTE_BASE}/today_pack.txt" "${TODAY_PACK_FILE}"
-cp "${START_DIR}/today_pack.txt" "${TODAY_PACK_FILE}"
+# cp "${START_DIR}/today_pack.txt" "${TODAY_PACK_FILE}"
 
 if [[ ! -f "${TODAY_PACK_FILE}" ]]; then
   cat > "${TODAY_PACK_FILE}" <<'EOF'
