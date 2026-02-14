@@ -325,7 +325,7 @@ while read -r dir url; do
     
     echo "Downloading to $target_path"
     download_civitai_model "$model_id" "$version_id" "$target_path"
-done < civitai_models.txt
+done < "${START_DIR}/civitai_models.txt"
 
 ###########################################
 # 4) Background sync-up loop for outputs   #
