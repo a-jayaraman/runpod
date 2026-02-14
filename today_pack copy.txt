@@ -12,10 +12,12 @@ models/ESRGAN/
 
 # -------- VAE --------
 models/VAE/fluxVaeSft_aeSft.sft
+models/VAE/qwen_image_vae.safetensors
 models/VAE/sdxl.vae.fp16.safetensors
 
 
 # -------- LoRA --------
+models/Lora/Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors
 models/Lora/vivid surreal IL v1.0.safetensors
 models/Lora/add-detail-xl.safetensors
 
@@ -35,3 +37,4 @@ models/StableDiffusion/animayhemPaleRider_v2TrueGrit.safetensors
 
 # -------- DiffusionModels --------
 models/DiffusionModels/z_image_turbo_bf16.safetensors
+models/DiffusionModels/qwen_image_edit_2511_bf16.safetensors

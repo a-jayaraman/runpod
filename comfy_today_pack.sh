@@ -32,13 +32,13 @@ RCLONE_REMOTE="${RCLONE_REMOTE:-b2}"
 BUCKET="${BUCKET:-comfyui-runpod-bucket}"
 
 # Where ComfyUI lives on the pod (can be ephemeral)
-COMFY_DIR="${COMFY_DIR:-/workspace/runpod-slim/ComfyUI}"
+COMFY_DIR="${COMFY_DIR:-/workspace/ComfyUI}"
 
 # Local cache root (ephemeral but fast)
 CACHE_ROOT="${CACHE_ROOT:-/cache}"
 
 # Where you want to store the "pack list" (one file listing today's models)
-TODAY_PACK_FILE="${TODAY_PACK_FILE:-/workspace/today_pack.txt}"
+TODAY_PACK_FILE="${TODAY_PACK_FILE:-${START_DIR}/today_pack.txt}"
 
 # ComfyUI listen config
 COMFY_HOST="${COMFY_HOST:-0.0.0.0}"
@@ -171,6 +171,33 @@ sync_up_dir() {
   rclone sync "${local_path}" "${remote_path}" "${rclone_common_flags[@]}"
 }
 
+download_civitai_model() {
+    local model_id="$1"
+    local version_id="${2:-}"
+    local target_dir="${3:-.}"
+    
+    if [[ -z "$model_id" ]]; then
+        echo "Error: Model ID required" >&2
+        return 1
+    fi
+    
+    if [[ -z "$CIVITAI_KEY" ]]; then
+        echo "Error: CIVITAI_KEY not set" >&2
+        return 1
+    fi
+    
+    mkdir -p "$target_dir"
+    
+    local url
+    if [[ -n "$version_id" ]]; then
+        url="https://civitai.com/api/download/models/${version_id}?token=${CIVITAI_KEY}"
+    else
+        url="https://civitai.com/api/download/models/${model_id}?token=${CIVITAI_KEY}"
+    fi
+    
+    (cd "$target_dir" && curl -L -OJ "$url")
+}
+
 ################################
 # 1) Sync essential directories #
 ################################
@@ -283,6 +310,22 @@ while IFS= read -r line; do
     rclone copy "${remote_file}" "${local_target_dir}" "${rclone_common_flags[@]}"
   fi
 done < "${TODAY_PACK_FILE}"
+
+########################################
+# 3) Pull external models              #
+########################################
+
+while read -r dir url; do
+    [[ -z "$dir" ]] && continue
+    
+    model_id=$(echo "$url" | grep -oP 'models/\K\d+')
+    version_id=$(echo "$url" | grep -oP 'modelVersionId=\K\d+')
+    
+    target_path="${LOCAL_MODELS}/${dir}"
+    
+    echo "Downloading to $target_path"
+    download_civitai_model "$model_id" "$version_id" "$target_path"
+done < models.txt
 
 ###########################################
 # 4) Background sync-up loop for outputs   #
