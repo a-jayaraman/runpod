@@ -1,2 +1,2 @@
-DiffusionModels https://civitai.com/models/2182526
-StableDiffusion https://civitai.com/models/1513492
+DiffusionModels https://civitai.com/api/download/models/2627397
+StableDiffusion https://civitai.com/api/download/models/2368123
